@@ -2,7 +2,7 @@ import sys
 from rknn.api import RKNN
 
 DATASET_PATH = '../../../datasets/COCO/coco_subset_20.txt'
-DEFAULT_RKNN_PATH = '../model/yolo11.rknn'
+DEFAULT_RKNN_PATH = '../model/rtdetrv2_r18vd_dsp.rknn'
 DEFAULT_QUANT = False
 
 def parse_arg():

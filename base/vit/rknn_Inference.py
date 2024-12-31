@@ -35,7 +35,7 @@ def get_host():
 INPUT_SIZE = 224
 
 RK3566_RK3568_RKNN_MODEL = 'vit_b_16_for_rk3566_rk3568.rknn'
-RK3588_RKNN_MODEL = 'vit_b_16_gor_rk3588.rknn'
+RK3588_RKNN_MODEL = 'vit_b_16_for_rk3588.rknn'
 RK3562_RKNN_MODEL = 'vit_b_16_for_rk3562.rknn'
 RK3576_RKNN_MODEL = 'vit_b_16_for_rk3576.rknn'
 

@@ -58,8 +58,8 @@ int main(int argc, char **argv)
     if (argc != 3)
     {
         printf("%s <model path> <camera device id/video path>\n", argv[0]);
-        printf("Usage: %s  yolov10s.rknn  0 \n", argv[0]);
-        printf("Usage: %s  yolov10s.rknn /path/xxxx.mp4\n", argv[0]);
+        printf("Usage: %s  yolov11s.rknn  0 \n", argv[0]);
+        printf("Usage: %s  yolov11s.rknn /path/xxxx.mp4\n", argv[0]);
         return -1;
     }
 
@@ -84,6 +84,7 @@ int main(int argc, char **argv)
             return -1;
         }
         // cap.set(cv::CAP_PROP_FOURCC, cv::VideoWriter::fourcc('M', 'J', 'P', 'G'));
+        // cap.set(cv::CAP_PROP_CONVERT_RGB,1);
         // cap.set(cv::CAP_PROP_FRAME_WIDTH, 1920);    // 设置宽度
         // cap.set(cv::CAP_PROP_FRAME_HEIGHT, 1080);  // 设置长度
     } else {
@@ -174,16 +175,5 @@ out:
     {
         printf("release_yolo11_model fail! ret=%d\n", ret);
     }
-
-    if (src_image.virt_addr != NULL)
-    {
-#if defined(RV1106_1103) 
-        dma_buf_free(rknn_app_ctx.img_dma_buf.size, &rknn_app_ctx.img_dma_buf.dma_buf_fd, 
-                rknn_app_ctx.img_dma_buf.dma_buf_virt_addr);
-#else
-        free(src_image.virt_addr);
-#endif
-    }
-
     return 0;
 }

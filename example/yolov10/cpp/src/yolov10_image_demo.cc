@@ -93,7 +93,7 @@ int main(int argc, char **argv)
         goto out;
     }
     gettimeofday(&stop_time, NULL);
-    printf("inference_yolov8_model use %f ms\n", (__get_us(stop_time) - __get_us(start_time)) / 1000);
+    printf("inference_yolov10_model use %f ms\n", (__get_us(stop_time) - __get_us(start_time)) / 1000);
 
     // 画框和概率
     gettimeofday(&start_time, NULL);

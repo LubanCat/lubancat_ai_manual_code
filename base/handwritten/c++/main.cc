@@ -209,6 +209,7 @@ int main(int argc, char** argv)
 
   rknn_inputs_set(ctx, io_num.n_input, inputs);
   rknn_output outputs[1];
+  memset(outputs,0,sizeof(outputs));
   outputs[0].want_float = 1;
 
   // Run

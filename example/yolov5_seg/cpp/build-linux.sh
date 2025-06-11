@@ -42,6 +42,9 @@ case ${TARGET_SOC} in
         ;;
     rk3588)
         ;;
+    rk3576)
+        TARGET_SOC="rk3576"
+        ;;
     rk3566)
         TARGET_SOC="rk356x"
         ;;
@@ -53,7 +56,7 @@ case ${TARGET_SOC} in
         ;;
     *)
         echo "Invalid target: ${TARGET_SOC}"
-        echo "Valid target: rk3562,rk3566,rk3568,rk3588"
+        echo "Valid target: rk3562,rk3566,rk3568,rk3576,rk3588"
         exit -1
         ;;
 esac

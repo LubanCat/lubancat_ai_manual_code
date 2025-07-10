@@ -46,6 +46,9 @@ if [[ -z ${ENABLE_ASAN} ]];then
     ENABLE_ASAN=OFF
 fi
 
+# disable 3rdparty libjpeg
+DISABLE_LIBJPEG=ON
+
 case ${TARGET_SOC} in
     rk356x)
         ;;
@@ -84,6 +87,7 @@ echo "INSTALL_DIR=${INSTALL_DIR}"
 echo "BUILD_DIR=${BUILD_DIR}"
 echo "BUILD_TYPE=${BUILD_TYPE}"
 echo "ENABLE_ASAN=${ENABLE_ASAN}"
+echo "DISABLE_LIBJPEG=${DISABLE_LIBJPEG}"
 echo "CC=${CC}"
 echo "CXX=${CXX}"
 echo "==================================="
@@ -102,6 +106,7 @@ cmake ../.. \
     -DCMAKE_SYSTEM_NAME=Linux \
     -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
     -DENABLE_ASAN=${ENABLE_ASAN} \
+    -DDISABLE_LIBJPEG=${DISABLE_LIBJPEG} \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
 make -j4
 make install

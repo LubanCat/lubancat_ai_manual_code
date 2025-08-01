@@ -6,18 +6,14 @@
 
 | 例程目录            | 对应教程章节                      |
 | ------------------ | ---------------------------------|
-| rknpu2             | rknpu2                          |
-| rknn_toolkit2      | RKNN Toolkit2介绍               |
-| rknn_toolkit_lite2 | rknn_toolkit_lite2介绍           |
-
-
-# 配套教程链接
-
-https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/index.html
+| rknpu2             | [RKNPU2](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/env/rknpu.html) |
+| rknn_toolkit2      | [RKNN Toolkit2介绍](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/env/toolkit2.html)               |
+| rknn_toolkit_lite2 | [rknn_toolkit_lite2介绍](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/env/toolkit_lite2.html)           |
+| rkllm              | [RKLLM](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/env/rkllm.html)          |
 
 
 # 参考链接
 
-https://github.com/rockchip-linux/rknn-toolkit2
+https://github.com/airockchip/rknn-toolkit2
 
-https://github.com/rockchip-linux/rknpu2
+https://github.com/airockchip/rknn-llm/tree/main

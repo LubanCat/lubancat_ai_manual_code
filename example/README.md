@@ -2,9 +2,9 @@
 
 | 目录                | 对应教程章节                       |
 | ------------------ | --------------------------------- |
-| picodet            | [飞桨（PaddlePaddle） FastDeploy](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/paddlepaddle_fastdeploy.html)    | 
-| ppocrv3            | [PP-ORCv3](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/pp_ocrv3.html)                        |
+| picodet            | [PP-Picodet](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/picodet.html)    | 
 | ppocrv4            | [PP-ORCv4](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/PP-ORCv4.html)                        | 
+| ppocrv5            | [PP-ORCv5](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/PP-ocrv5.html)                        | 
 | ppseg              | [PP-LitetSeg](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/ppseg.html)                     |
 | ppyoloe            | [PP-YOLOE](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/ppyoloe.html)                        |
 | RT-DETR            | [RT-DETR](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/RT-DETR.html)                         |
@@ -16,7 +16,10 @@
 | yolov8-obb         | [YOLOv8旋转目标检测](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/yolov8_obb.html)                |
 | yolov10            | [YOLOv10](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/yolov10.html)                     |
 | yolo11             | [YOLOv11](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/yolo11.html)                        |
-| melotts            | [MeloTTs](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/tts.html#melotts)                        |
+| mobileclip         | [MobileCLIP](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/clip.html#id14)                        | 
+| owl-vit            | [OWL-ViT](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/owl-vit.html)                        | 
+| sense-voice        | [Sensevoice](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/snesevoice.html)                        | 
+| melotts            | [MeloTTS](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/tts.html#melotts)                        |
 | garbage_detection  | [垃圾检测和识别](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/garbage_detect.html)               |
 
 

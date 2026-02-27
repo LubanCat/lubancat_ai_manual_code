@@ -1,7 +1,7 @@
 # 目录说明
 
-| 目录                | 对应教程章节                       |
-| ------------------ | --------------------------------- |
+| 目录                | 对应教程章节                       |  说明  |
+| ------------------ | --------------------------------- | ------ |
 | picodet            | [PP-Picodet](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/picodet.html)    | 
 | ppocrv4            | [PP-ORCv4](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/PP-ORCv4.html)                        | 
 | ppocrv5            | [PP-ORCv5](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/PP-ocrv5.html)                        | 
@@ -16,6 +16,7 @@
 | yolov8-obb         | [YOLOv8旋转目标检测](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/yolov8_obb.html)                |
 | yolov10            | [YOLOv10](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/yolov10.html)                     |
 | yolo11             | [YOLOv11](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/yolo11.html)                        |
+| yolo26             | [YOLOv26](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/yolo26.html)                        | yolo26 det/seg/pose/obb |
 | mobileclip         | [MobileCLIP](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/clip.html#id14)                        | 
 | owl-vit            | [OWL-ViT](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/owl-vit.html)                        | 
 | sense-voice        | [Sensevoice](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/snesevoice.html)                        | 
@@ -36,4 +37,4 @@ sudo bash scaling_frequency.sh -c rk3568
 
 # 问题反馈
 
-如果有任何问题请联系淘宝野火官方旗舰店技术支持反馈。
+如果有任何问题请联系淘宝野火官方旗舰店技术支持。

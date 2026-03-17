@@ -12,7 +12,7 @@
 | yolov5             | [YOLOv5(目标检测)](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/yolov5.html)                 |
 | yolov5_seg         | [YOLOv5(实例分割)](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/yolov5_seg.html)                 |
 | yolov5face         | [YOLOv5Face(人脸检测)](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/yolov5_face.html)             |
-| yolov8             | [YOLOv8](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/yolov8.html)                 |
+| yolov8             | [YOLOv8](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/yolov8.html)                 | yolo8 det/seg/pose |
 | yolov8-obb         | [YOLOv8旋转目标检测](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/yolov8_obb.html)                |
 | yolov10            | [YOLOv10](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/yolov10.html)                     |
 | yolo11             | [YOLOv11](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/yolo11.html)                        |

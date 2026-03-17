@@ -9,12 +9,6 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 # set(OpenCV_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../3rdparty/opencv/opencv-linux-aarch64/share/OpenCV)
 find_package(OpenCV REQUIRED)
 
-# rga
-set(RGA_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../../3rdparty/librga)
-set(LIBRGA ${RGA_PATH}/${CMAKE_SYSTEM_NAME}/aarch64/librga.a)
-set(RGA_INCLUDES ${RGA_PATH}/include)
-install(PROGRAMS ${RGA_PATH}/${CMAKE_SYSTEM_NAME}/aarch64/librga.so DESTINATION lib)
-
 # only RGA on rv1106 and rk3588 support handle
 if (TARGET_SOC STREQUAL "rk3588")
     add_definitions(-DLIBRGA_IM2D_HANDLE)
@@ -28,14 +22,8 @@ endif()
 # dma
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../3rdparty/allocator/dma)
 
-# rknn runtime
-if (TARGET_SOC STREQUAL "rk3588" OR TARGET_SOC STREQUAL "rk356x")
-    set(RKNN_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../../3rdparty/rknpu2)
-    set(LIBRKNNRT ${RKNN_PATH}/${CMAKE_SYSTEM_NAME}/aarch64/librknnrt.so)
-    set(LIBRKNNRT_INCLUDES ${RKNN_PATH}/include)
-endif()
-install(PROGRAMS ${LIBRKNNRT} DESTINATION lib)
-set(LIBRKNNRT ${LIBRKNNRT})
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../../3rdparty/ 3rdparty.out)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../../utils/ utils.out)
 
 # rknn_yolov8_demo(image)
 add_executable(${PROJECT_NAME}
@@ -69,7 +57,7 @@ target_link_libraries(yolov8_videocapture_demo
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${RGA_INCLUDES}
+    ${LIBRGA_INCLUDES}
     ${LIBRKNNRT_INCLUDES}
 )
 

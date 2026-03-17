@@ -35,6 +35,9 @@ case ${TARGET_SOC} in
         ;;
     rk3588)
         ;;
+    rk3576)
+        TARGET_SOC="rk3576"
+        ;;
     rk3566)
         TARGET_SOC="rk356x"
         ;;

@@ -24,87 +24,6 @@
 
 inline static int clamp(float val, int min, int max) { return val > min ? (val < max ? val : max) : min; }
 
-static float CalculateOverlap(float xmin0, float ymin0, float xmax0, float ymax0, float xmin1, float ymin1, float xmax1,
-                              float ymax1)
-{
-    float w = fmax(0.f, fmin(xmax0, xmax1) - fmax(xmin0, xmin1) + 1.0);
-    float h = fmax(0.f, fmin(ymax0, ymax1) - fmax(ymin0, ymin1) + 1.0);
-    float i = w * h;
-    float u = (xmax0 - xmin0 + 1.0) * (ymax0 - ymin0 + 1.0) + (xmax1 - xmin1 + 1.0) * (ymax1 - ymin1 + 1.0) - i;
-    return u <= 0.f ? 0.f : (i / u);
-}
-
-static int nms(int validCount, std::vector<float> &outputLocations, std::vector<int> classIds, std::vector<int> &order,
-               int filterId, float threshold)
-{
-    for (int i = 0; i < validCount; ++i)
-    {
-        int n = order[i];
-        if (n == -1 || classIds[n] != filterId)
-        {
-            continue;
-        }
-        for (int j = i + 1; j < validCount; ++j)
-        {
-            int m = order[j];
-            if (m == -1 || classIds[m] != filterId)
-            {
-                continue;
-            }
-            float xmin0 = outputLocations[n * 4 + 0];
-            float ymin0 = outputLocations[n * 4 + 1];
-            float xmax0 = outputLocations[n * 4 + 0] + outputLocations[n * 4 + 2];
-            float ymax0 = outputLocations[n * 4 + 1] + outputLocations[n * 4 + 3];
-
-            float xmin1 = outputLocations[m * 4 + 0];
-            float ymin1 = outputLocations[m * 4 + 1];
-            float xmax1 = outputLocations[m * 4 + 0] + outputLocations[m * 4 + 2];
-            float ymax1 = outputLocations[m * 4 + 1] + outputLocations[m * 4 + 3];
-
-            float iou = CalculateOverlap(xmin0, ymin0, xmax0, ymax0, xmin1, ymin1, xmax1, ymax1);
-
-            if (iou > threshold)
-            {
-                order[j] = -1;
-            }
-        }
-    }
-    return 0;
-}
-
-static int quick_sort_indice_inverse(std::vector<float> &input, int left, int right, std::vector<int> &indices)
-{
-    float key;
-    int key_index;
-    int low = left;
-    int high = right;
-    if (left < right)
-    {
-        key_index = indices[left];
-        key = input[left];
-        while (low < high)
-        {
-            while (low < high && input[high] <= key)
-            {
-                high--;
-            }
-            input[low] = input[high];
-            indices[low] = indices[high];
-            while (low < high && input[low] >= key)
-            {
-                low++;
-            }
-            input[high] = input[low];
-            indices[high] = indices[low];
-        }
-        input[low] = key;
-        indices[low] = key_index;
-        quick_sort_indice_inverse(input, left, low - 1, indices);
-        quick_sort_indice_inverse(input, low + 1, right, indices);
-    }
-    return low;
-}
-
 static float sigmoid(float x) { return 1.0 / (1.0 + expf(-x)); }
 
 static float unsigmoid(float y) { return -1.0 * logf((1.0 / y) - 1.0); }
@@ -133,23 +52,6 @@ static float deqnt_affine_to_f32(int8_t qnt, int32_t zp, float scale) { return (
 
 static float deqnt_affine_u8_to_f32(uint8_t qnt, int32_t zp, float scale) { return ((float)qnt - (float)zp) * scale; }
 
-static void compute_dfl(float* tensor, int dfl_len, float* box){
-    for (int b=0; b<4; b++){
-        float exp_t[dfl_len];
-        float exp_sum=0;
-        float acc_sum=0;
-        for (int i=0; i< dfl_len; i++){
-            exp_t[i] = exp(tensor[i+b*dfl_len]);
-            exp_sum += exp_t[i];
-        }
-        
-        for (int i=0; i< dfl_len; i++){
-            acc_sum += exp_t[i]/exp_sum *i;
-        }
-        box[b] = acc_sum;
-    }
-}
-
 static int process_i8(int8_t *input, int32_t zp, float scale,
                       int grid_h, int grid_w, int stride,
                       std::vector<float> &boxes, 
@@ -171,8 +73,6 @@ static int process_i8(int8_t *input, int32_t zp, float scale,
                     for (int i = 0; i < input_loc_len; ++i) {
                         loc[i] = deqnt_affine_to_f32(input[i * grid_w * grid_h + h * grid_w + w], zp, scale);
                     }
-                    printf("loc: %.2f, %.2f, %.2f, %.2f \n", loc[0], loc[1], loc[2], loc[3]);
-                    printf("hw: %d, %d \n", h, w);
                     float x1,y1,w_,h_;
                     x1 = (w + 0.5 - loc[0])*stride;
                     y1 = (h + 0.5 - loc[1])*stride;
@@ -185,16 +85,11 @@ static int process_i8(int8_t *input, int32_t zp, float scale,
                     objProbs.push_back(box_conf_f32);
                     classId.push_back(a);
                     validCount++;
-
-                    printf("x1=%.2f, y1=%.2f, w=%.2f, h=%.2f, objProb=%.2f, classId=%d\n", x1, y1, w_, h_, box_conf_f32, a);
                 }
             }
         }
     }
-    printf("validCount=%d\n", validCount);
-    printf("grid h-%d, w-%d, stride %d\n", grid_h, grid_w, stride);
     return validCount;
-
 }
 
 static int process_fp32(float *input,
@@ -299,8 +194,7 @@ int post_process(rknn_app_context_t *app_ctx, void *outputs, letterbox_t *letter
 
     memset(od_results, 0, sizeof(object_detect_result_list));
 
-    // default 3 branch
-    // int dfl_len = app_ctx->output_attrs[0].dims[1] /4;
+    // default 3 branch  [1, 84, 80, 80]  [1, 84, 40, 40] [1, 84, 20, 20]
     int output_per_branch = app_ctx->io_num.n_output / 3;
     for (int i = 0; i < 3; i++)
     {

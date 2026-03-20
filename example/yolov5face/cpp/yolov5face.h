@@ -31,8 +31,8 @@
 #define OBJ_NAME_MAX_SIZE 128
 #define OBJ_NUMB_MAX_SIZE 512
 #define OBJ_CLASS_NUM 1
-#define NMS_THRESH 0.45
-#define BOX_THRESH 0.25
+#define NMS_THRESH 0.5
+#define BOX_THRESH 0.6
 #define PROP_BOX_SIZE (4 + 1 + 10 + OBJ_CLASS_NUM)
 
 typedef struct {

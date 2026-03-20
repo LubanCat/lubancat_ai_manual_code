@@ -24,6 +24,9 @@
 #include "image_drawing.h"
 
 #include "easy_timer.h"
+#if defined(RV1106_1103) 
+    #include "dma_alloc.hpp"
+#endif
 
 /*-------------------------------------------
                   Main Function
@@ -57,6 +60,17 @@ int main(int argc, char **argv)
     ret = read_image(image_path, &src_image);
     time.tok();
     time.print_time("read_image");
+#if defined(RV1106_1103) 
+    //RV1106 rga requires that input and output bufs are memory allocated by dma
+    ret = dma_buf_alloc(RV1106_CMA_HEAP_PATH, src_image.size, &rknn_app_ctx.img_dma_buf.dma_buf_fd, 
+                       (void **) & (rknn_app_ctx.img_dma_buf.dma_buf_virt_addr));
+    memcpy(rknn_app_ctx.img_dma_buf.dma_buf_virt_addr, src_image.virt_addr, src_image.size);
+    dma_sync_cpu_to_device(rknn_app_ctx.img_dma_buf.dma_buf_fd);
+    free(src_image.virt_addr);
+    src_image.virt_addr = (unsigned char *)rknn_app_ctx.img_dma_buf.dma_buf_virt_addr;
+    src_image.fd = rknn_app_ctx.img_dma_buf.dma_buf_fd;
+    rknn_app_ctx.img_dma_buf.size = src_image.size;
+#endif
     if (ret != 0)
     {
         printf("read image fail! ret=%d image_path=%s\n", ret, image_path);
@@ -105,7 +119,12 @@ out:
 
     if (src_image.virt_addr != NULL)
     {
+#if defined(RV1106_1103) 
+        dma_buf_free(rknn_app_ctx.img_dma_buf.size, &rknn_app_ctx.img_dma_buf.dma_buf_fd, 
+                rknn_app_ctx.img_dma_buf.dma_buf_virt_addr);
+#else
         free(src_image.virt_addr);
+#endif
     }
 
     return 0;

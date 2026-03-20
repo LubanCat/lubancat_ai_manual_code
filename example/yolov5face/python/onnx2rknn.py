@@ -1,7 +1,7 @@
 import sys
 from rknn.api import RKNN
 
-DATASET_PATH = '../model/dataset.txt'
+DATASET_PATH = '../../../datasets/COCO/coco_subset_20.txt'
 DEFAULT_RKNN_PATH = './yolov5n_face.rknn'
 DEFAULT_QUANT = True
 

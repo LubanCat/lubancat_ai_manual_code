@@ -34,7 +34,7 @@ done
 if [ -z ${TARGET_SOC} ] ; then
   echo "$0 -t <target> "
   echo ""
-  echo "    -t : target (rk356x/rk3588/rk3576)"
+  echo "    -t : target (rk356x/rk3588/rk3576/rv1106)"
   echo "    -r : disable rga, use cpu resize image"
   echo "    -b : build_type(Debug/Release)"
   echo "    -m : enable address sanitizer, build_type need set to Debug"
@@ -48,6 +48,11 @@ case ${TARGET_SOC} in
     rk356x)
         ;;
     rk3588)
+        ;;
+    rv1106)
+        ;;
+    rv1103)
+        TARGET_SOC="rv1106"
         ;;
     rk3576)
         TARGET_SOC="rk3576"
@@ -63,7 +68,7 @@ case ${TARGET_SOC} in
         ;;
     *)
         echo "Invalid target: ${TARGET_SOC}"
-        echo "Valid target: rk3562,rk3566,rk3568,rk3576,rk3588"
+        echo "Valid target: rk3562,rk3566,rk3568,rk3588,rk3576,rv1106,rv1103"
         exit -1
         ;;
 esac
@@ -87,8 +92,18 @@ if [[ -z ${ENABLE_ASAN} ]];then
     ENABLE_ASAN=OFF
 fi
 
-# 板卡上编译，默认编译器
-GCC_COMPILER=aarch64-linux-gnu
+if [[ -z ${GCC_COMPILER} ]];then
+    if [[ ${TARGET_SOC} = "rv1106"  || ${TARGET_SOC} = "rv1103" ]];then
+        echo "Please set GCC_COMPILER for $TARGET_SOC"
+        echo "such as export GCC_COMPILER=~/opt/arm-rockchip830-linux-uclibcgnueabihf/bin/arm-rockchip830-linux-uclibcgnueabihf"
+        exit
+    elif [[ ${TARGET_SOC} = "rv1109" || ${TARGET_SOC} = "rv1126" ]];then
+        GCC_COMPILER=arm-linux-gnueabihf
+    else
+        GCC_COMPILER=aarch64-linux-gnu
+    fi
+fi
+echo "$GCC_COMPILER"
 export CC=${GCC_COMPILER}-gcc
 export CXX=${GCC_COMPILER}-g++
 

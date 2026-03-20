@@ -11,11 +11,17 @@ endif ()
 
 set(rknpu_yolov5_file rknpu2/yolov5face.cc)
 
+if (TARGET_SOC STREQUAL "rv1106" OR TARGET_SOC STREQUAL "rv1103")
+    add_definitions(-DRV1106_1103)
+    set(rknpu_yolov5_file rknpu2/yolov5face_rv1106.cc)
+endif()
+
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../3rdparty/ 3rdparty.out)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../utils/ utils.out)
 
 #dma
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../3rdparty/allocator/dma)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../3rdparty/allocator/drm)
 
 set(CMAKE_INSTALL_RPATH "$ORIGIN/lib")
 
@@ -25,6 +31,7 @@ if (ENABLE_DMA32 STREQUAL "TRUE")
     add_definitions(-DDMA_ALLOC_DMA32)
 endif()
 
+# rknn_yolov5face_demo
 add_executable(${PROJECT_NAME}
     main.cc
     ${rknpu_yolov5_file}

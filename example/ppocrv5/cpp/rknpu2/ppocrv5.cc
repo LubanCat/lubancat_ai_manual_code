@@ -339,7 +339,6 @@ int init_ppocr_rec_model(const char* model_path, rknn_app_context_t* app_ctx)
     return 0;
 }
 
-
 int release_ppocr_model(rknn_app_context_t* app_ctx)
 {
     if (app_ctx->input_attrs != NULL) {
@@ -385,19 +384,12 @@ int inference_ppocr_det_model(rknn_app_context_t* app_ctx, image_buffer_t* src_i
         return -1;
     }
 
-    // cv::Mat img_M = cv::Mat(img.height, img.width, CV_8UC3,(uint8_t*)img.virt_addr);
-    // img_M.convertTo(img_M, CV_32FC3);
-
     // Set Input Data
     inputs[0].index = 0;
     inputs[0].type  = RKNN_TENSOR_UINT8;
-    // inputs[0].type  = RKNN_TENSOR_FLOAT32;
     inputs[0].fmt   = RKNN_TENSOR_NHWC;
     inputs[0].size  = app_ctx->model_width * app_ctx->model_height * app_ctx->model_channel;
-    // inputs[0].size  = app_ctx->model_width * app_ctx->model_height * app_ctx->model_channel * sizeof(float);
     inputs[0].buf   = img.virt_addr;
-    // inputs[0].buf = malloc(inputs[0].size);
-    // memcpy(inputs[0].buf, img_M.data, inputs[0].size);
 
     float scale_w = (float)src_img->width / (float)img.width;
     float scale_h = (float)src_img->height / (float)img.height;
@@ -490,11 +482,12 @@ void inference_ppocr_rec_worker_thread(int id, rknn_app_context_t* app_ctx, rknn
         }
         cv::resize(crop_image, crop_image, cv::Size(resized_w, imgH));
 
-        crop_image.convertTo(crop_image, CV_32FC3);
-        crop_image = (crop_image - 127.5)/127.5;
         if (resized_w < imgW) {
             copyMakeBorder(crop_image, crop_image, 0, 0, 0, imgW - resized_w, cv::BORDER_CONSTANT, 0);
         }
+
+        crop_image.convertTo(crop_image, CV_32FC3);
+        crop_image = (crop_image - 127.5)/127.5;
 
         // set input_attrs
         if(input_attrs[0].dims[2] != imgW) {
@@ -524,22 +517,35 @@ void inference_ppocr_rec_worker_thread(int id, rknn_app_context_t* app_ctx, rknn
         // Post Process
         std::string str_res;
         float score = 0.f;
-        int argmax_idx;
-        int last_index = 0;
+        int argmax_idx = -1;
+        int last_index = -1;
         int count = 0;
-        float max_value = 0.0f;
+
+        // [1, 1, out_seq_len, model_out_channel], ppocrv5=18385, ppocrv6=18710,ppocrv6_tiny=6622
+        int model_out_channel = app_ctx->output_attrs[0].dims[2];
 
         float* out_data = (float*)outputs[0].buf;
         for (int n = 0; n < out_seq_len; n++) {
-            float * max_idx = std::max_element(&out_data[n * MODEL_OUT_CHANNEL], &out_data[(n + 1) * MODEL_OUT_CHANNEL - 1]);
-            argmax_idx = int(std::distance(&out_data[n * MODEL_OUT_CHANNEL], max_idx));
-            max_value = float(*max_idx);
-            if (argmax_idx > 0 && (!(n > 0 && argmax_idx == last_index))) {
-                score += max_value;
-                count += 1;
-                assert(argmax_idx <= MODEL_OUT_CHANNEL);
-                str_res += ocr_dict[argmax_idx];
+            float max_value = -1e10;
+            float* row = &out_data[n * model_out_channel];
+            for (int j = 0; j < model_out_channel; j++) {
+                float value = row[j];
+                if (value > max_value) {
+                    max_value = value;
+                    argmax_idx = j;
+                }
             }
+
+            if ((argmax_idx != last_index) && argmax_idx != 0) {
+                if(argmax_idx > 0 && argmax_idx <= (int)ocr_vocab.size()) {
+                    score += max_value;
+                    count += 1;
+                    str_res += ocr_vocab[argmax_idx-1];
+                }
+                else if(!str_res.empty() && str_res.back() != ' ') {
+                    str_res += ' ';
+                }
+            } 
             last_index = argmax_idx;
         }
         score /= (count + 1e-6);

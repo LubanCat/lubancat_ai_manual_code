@@ -4,7 +4,7 @@
 | ------------------ | --------------------------------- | ------ |
 | picodet            | [PP-Picodet](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/picodet.html)    | 
 | ppocrv4            | [PP-ORCv4](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/PP-ORCv4.html)                        | 
-| ppocrv5            | [PP-ORCv5](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/PP-ocrv5.html)                        | 
+| ppocrv5            | [PP-ORCv5](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/PP-ocrv5.html)                        | ppocrv5/6 |
 | ppseg              | [PP-LitetSeg](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/ppseg.html)                     |
 | ppyoloe            | [PP-YOLOE](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/ppyoloe.html)                        |
 | RT-DETR            | [RT-DETR](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/RT-DETR.html)                         |

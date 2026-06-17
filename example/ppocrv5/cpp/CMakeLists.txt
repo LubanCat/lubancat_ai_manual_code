@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(rknn_ppocrv5_demo)
+project(rknn_ppocrv_demo)
 set(CMAKE_INSTALL_RPATH "$ORIGIN/lib")
 
 if (ENABLE_ASAN)
@@ -50,7 +50,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 )
 
 install(TARGETS ${PROJECT_NAME} DESTINATION .)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../model/test1.jpg DESTINATION model)
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../model/general_ocr_002.png DESTINATION model)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../model/ppocrv5_dict.txt DESTINATION model)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../model/ppocrv6_dict.txt DESTINATION model)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../model/ppocrv6_tiny_dict.txt DESTINATION model)
 set(file_path ${CMAKE_CURRENT_SOURCE_DIR}/../model/PP-OCRv5_mobile_det.rknn)
 if (EXISTS ${file_path})
     install(FILES ${file_path} DESTINATION model)

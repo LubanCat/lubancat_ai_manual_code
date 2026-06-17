@@ -21,6 +21,8 @@
 
 #include "ppocrv5.h"
 
+std::vector<std::string> ocr_vocab;
+
 #define INDENT "    "
 #define THRESHOLD 0.3                                       // pixel score threshold
 #define BOX_THRESHOLD 0.6                            // box score threshold
@@ -28,6 +30,23 @@
 #define DB_SCORE_MODE "slow"                        // slow or fast. slow for polygon mask; fast for rectangle mask
 #define DB_BOX_TYPE "poly"                                // poly or quad. poly for returning polygon box; quad for returning rectangle box
 #define DB_UNCLIP_RATIO 1.5                          // unclip ratio for poly type
+
+std::vector<std::string> loadVocab(const std::string& filename) {
+    std::ifstream file(filename);
+    
+    if (!file.is_open()) {
+        std::cerr << "error: failed to open file  " << filename << std::endl;
+        return ocr_vocab;
+    }
+    
+    std::string line;
+    while (std::getline(file, line)) {
+        ocr_vocab.push_back(line);
+    }
+    
+    file.close();
+    return ocr_vocab;
+}
 
 /*-------------------------------------------
                   Main Function
@@ -37,14 +56,20 @@ int main(int argc, char** argv)
     char* det_model_path = NULL;
     char* cls_model_path = NULL;
     char* rec_model_path = NULL;
+    char* vocab_path = NULL;
     char* image_path = NULL;
 
-    if(argc == 4) {
+    if(argc == 5) {
         det_model_path = argv[1];
         rec_model_path = argv[2];
-        image_path = argv[3];
+        vocab_path = argv[3];
+        image_path = argv[4];
     } else {
-        printf("%s <det_model_path> <rec_model_path> <image_path>\n", argv[0]);
+        printf("%s <det_model_path> <rec_model_path> <vocab_path> <image_path>\n", argv[0]);
+        printf("e.g., %s ./models/PP-OCRv5_mobile_det.rknn ./models/PP-OCRv5_mobile_rec.rknn ./models/ppocrv5_dict.txt ./images/test1.jpg\n", argv[0]);
+        printf("e.g., %s ./models/PP-OCRv6_medium_det.rknn ./models/PP-OCRv6_medium_rec.rknn ./models/ppocrv6_dict.txt ./images/test1.jpg\n", argv[0]);
+        printf("e.g., %s ./models/PP-OCRv6_tiny_det.rknn ./models/PP-OCRv6_tiny_rec.rknn ./models/ppocrv6_tiny_dict.txt ./images/test1.jpg\n", argv[0]);
+        printf("e.g., %s ./models/PP-OCRv6_small_det.rknn ./models/PP-OCRv6_small_rec.rknn ./models/ppocrv6_dict.txt ./images/test1.jpg\n", argv[0]);
         return -1;
     }
 
@@ -54,12 +79,21 @@ int main(int argc, char** argv)
     ppocr_system_app_context rknn_app_ctx;
     memset(&rknn_app_ctx, 0, sizeof(ppocr_system_app_context));
 
+    // load vocab
+    loadVocab(vocab_path);
+    if (ocr_vocab.empty()) {
+        printf("Failed to load vocabulary.");
+        return 1;
+    }
+
+    // init detect model
     ret = init_ppocr_model(det_model_path, &rknn_app_ctx.det_context);
     if (ret != 0) {
         printf("init_ppocr_model fail! ret=%d det_model_path=%s\n", ret, det_model_path);
         return -1;
     }
 
+    // init rec [dynamic_range]
     ret = init_ppocr_rec_model(rec_model_path, &rknn_app_ctx.rec_context);
     if (ret != 0) {
         printf("init_ppocr_model fail! ret=%d rec_model_path=%s\n", ret, rec_model_path);
@@ -79,16 +113,17 @@ int main(int argc, char** argv)
     // OpenCV读取图片
     image_buffer_t src_image;
     memset(&src_image, 0, sizeof(image_buffer_t));
-    orig_img = cv::imread(image_path);
+    orig_img = cv::imread(image_path, cv::IMREAD_COLOR);
     if (!orig_img.data) {
         printf("cv::imread %s fail!\n", image_path);
         return -1;
     }
+    cv::cvtColor(orig_img, image, cv::COLOR_BGR2RGB);
 
-    src_image.width  = orig_img.cols;
-    src_image.height = orig_img.rows;
+    src_image.width  = image.cols;
+    src_image.height = image.rows;
     src_image.format = IMAGE_FORMAT_RGB888;
-    src_image.virt_addr = (unsigned char*)orig_img.data;
+    src_image.virt_addr = (unsigned char*)image.data;
 
     timer.tik();
     ret = inference_ppocrv5_model(&rknn_app_ctx, &src_image, &params, &results);
@@ -97,10 +132,10 @@ int main(int argc, char** argv)
         goto out;
     }
     timer.tok();
-    timer.print_time("inference_ppocrv5_model");
+    timer.print_time("inference_ppocr_model");
 
     // Draw Objects
-    printf("DRAWING OBJECT\n");
+    printf("OBJECTS:\n");
     for (int i = 0; i < results.count; i++)
     {
         if (results.text_result[i].text.score == 0){

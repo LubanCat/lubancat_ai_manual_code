@@ -2,17 +2,19 @@
 #define _RKNN_DEMO_PPOCRSYSTEM_H_
 
 #include <string>
+#include <vector>
 #include <opencv2/opencv.hpp>
 
 #include "rknn_api.h"
 #include "common.h"
 #include "image_utils.h"
 #include "easy_timer.h"
-#include "dict_ppocrv5.h"
 
-#define MODEL_OUT_CHANNEL 18385
-#define TEXT_SCORE 0.5
+#define TEXT_SCORE 0.3
 #define IMAGE_HEIGHT 48
+
+// Global variable for OCR vocabulary
+extern std::vector<std::string> ocr_vocab;
 
 typedef struct {
     rknn_context rknn_ctx;

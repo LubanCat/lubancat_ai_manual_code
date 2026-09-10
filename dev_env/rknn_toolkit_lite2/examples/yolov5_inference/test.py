@@ -7,8 +7,9 @@ import platform
 from rknnlite.api import RKNNLite
 
 RK3566_RK3568_RKNN_MODEL = 'yolov5s_for_rk3566_rk3568.rknn'
-RK3588_RKNN_MODEL = 'yolov5s_for_rk3588.rknn'
+RK3588_RKNN_MODEL = 'yolov5s_relu.rknn'
 RK3562_RKNN_MODEL = 'yolov5s_for_rk3562.rknn'
+RK3576_RKNN_MODEL = 'yolov5s_for_rk3576.rknn'
 IMG_PATH = './bus.jpg'
 
 OBJ_THRESH = 0.25
@@ -37,6 +38,8 @@ def get_host():
                 device_compatible_str = f.read()
                 if 'rk3588' in device_compatible_str:
                     host = 'RK3588'
+                elif 'rk3576' in device_compatible_str:
+                    host = 'RK3576'
                 elif 'rk3562' in device_compatible_str:
                     host = 'RK3562'
                 else:
@@ -68,12 +71,12 @@ def process(input, mask, anchors):
     anchors = [anchors[i] for i in mask]
     grid_h, grid_w = map(int, input.shape[0:2])
 
-    box_confidence = sigmoid(input[..., 4])
+    box_confidence = input[..., 4]
     box_confidence = np.expand_dims(box_confidence, axis=-1)
 
-    box_class_probs = sigmoid(input[..., 5:])
+    box_class_probs = input[..., 5:]
 
-    box_xy = sigmoid(input[..., :2])*2 - 0.5
+    box_xy = input[..., :2]*2 - 0.5
 
     col = np.tile(np.arange(0, grid_w), grid_w).reshape(-1, grid_w)
     row = np.tile(np.arange(0, grid_h).reshape(-1, 1), grid_h)
@@ -83,7 +86,7 @@ def process(input, mask, anchors):
     box_xy += grid
     box_xy *= int(IMG_SIZE/grid_h)
 
-    box_wh = pow(sigmoid(input[..., 2:4])*2, 2)
+    box_wh = pow(input[..., 2:4]*2, 2)
     box_wh = box_wh * anchors
 
     box = np.concatenate((box_xy, box_wh), axis=-1)
@@ -214,10 +217,10 @@ def draw(image, boxes, scores, classes):
         scores: ndarray, scores of objects.
         all_classes: all classes name.
     """
+    print("{:^12} {:^12}  {}".format('class', 'score', 'xmin, ymin, xmax, ymax'))
+    print('-' * 50)
     for box, score, cl in zip(boxes, scores, classes):
         top, left, right, bottom = box
-        print('class: {}, score: {}'.format(CLASSES[cl], score))
-        print('box coordinate left,top,right,down: [{}, {}, {}, {}]'.format(top, left, right, bottom))
         top = int(top)
         left = int(left)
         right = int(right)
@@ -228,6 +231,8 @@ def draw(image, boxes, scores, classes):
                     (top, left - 6),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     0.6, (0, 0, 255), 2)
+
+        print("{:^12} {:^12.3f} [{:>4}, {:>4}, {:>4}, {:>4}]".format(CLASSES[cl], score, top, left, right, bottom))
 
 
 def letterbox(im, new_shape=(640, 640), color=(0, 0, 0)):
@@ -262,6 +267,8 @@ if __name__ == '__main__':
         rknn_model = RK3566_RK3568_RKNN_MODEL
     elif host_name == 'RK3562':
         rknn_model = RK3562_RKNN_MODEL
+    elif host_name == 'RK3576':
+        rknn_model = RK3576_RKNN_MODEL
     elif host_name == 'RK3588':
         rknn_model = RK3588_RKNN_MODEL
     else:
@@ -299,7 +306,8 @@ if __name__ == '__main__':
 
     # Inference
     print('--> Running model')
-    outputs = rknn_lite.inference(inputs=[img])
+    img2 = np.expand_dims(img, 0)
+    outputs = rknn_lite.inference(inputs=[img2])
     #np.save('./onnx_yolov5_0.npy', outputs[0])
     #np.save('./onnx_yolov5_1.npy', outputs[1])
     #np.save('./onnx_yolov5_2.npy', outputs[2])

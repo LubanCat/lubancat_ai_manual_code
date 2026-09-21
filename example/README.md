@@ -1,7 +1,7 @@
 # 目录说明
 
-| 目录                | 对应教程章节                       |  说明  |
-| ------------------ | --------------------------------- | ------ |
+| 目录                | 对应教程章节                       |  说明  |   目标平台  |
+| ------------------ | --------------------------------- | ------ | ------ |
 | picodet            | [PP-Picodet](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/picodet.html)    | 
 | ppocrv4            | [PP-ORCv4](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/PP-ORCv4.html)                        | 
 | ppocrv5            | [PP-ORCv5](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/PP-ocrv5.html)                        | ppocrv5/6 |
@@ -16,13 +16,13 @@
 | yolov8-obb         | [YOLOv8旋转目标检测](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/yolov8_obb.html)                |
 | yolov10            | [YOLOv10](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/yolov10.html)                     |
 | yolo11             | [YOLOv11](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/yolo11.html)                        |
-| yolo26             | [YOLOv26](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/yolo26.html)                        | yolo26 det/seg/pose/obb |
+| yolo26             | [YOLOv26](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/yolo26.html)                        | yolo26 det/seg/pose/obb/depth | rv1106/rk356x/rk3576/rk3588系列 |
 | mobileclip         | [MobileCLIP](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/clip.html#id14)                        | 
 | owl-vit            | [OWL-ViT](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/owl-vit.html)                        | 
 | sense-voice        | [Sensevoice](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/snesevoice.html)                        | 
 | melotts            | [MeloTTS](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/tts.html#melotts)                        |
-| garbage_detection  | [垃圾检测和识别](https://doc.embedfire.com/linux/rk356x/Ai/zh/latest/lubancat_ai/example/garbage_detect.html)               |
 
+注：目标平台只是代表教程测试的平台，不代表实际例程不能部署在其他的平台。
 
 # 文件说明
 

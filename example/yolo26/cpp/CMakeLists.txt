@@ -97,6 +97,13 @@ buildtarget(NAME yolo26_obb_demo
     SRCS yolo26_obb_demo.cc postprocess_obb.cc rknpu2/yolo26_obb.cc
     DEPS imageutils fileutils imagedrawing ${LIBRKNNRT} ${OpenCV_LIBS} dl
 )
+
+# yolo26_depth_demo   
+buildtarget(NAME yolo26_depth_demo
+    INCS ${CMAKE_CURRENT_SOURCE_DIR} ${LIBRKNNRT_INCLUDES} ${LIBTIMER_INCLUDES} ${LIBCNPY_INCLUDES}
+    SRCS yolo26_depth_demo.cc rknpu2/yolo26_depth.cc postprocess_depth.cc
+    DEPS imageutils fileutils imagedrawing ${LIBRKNNRT} ${OpenCV_LIBS} dl
+)
 endif()
 
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../model/bus.jpg DESTINATION model)

@@ -2,7 +2,7 @@
 set -e
 
 echo "$0 $@"
-while getopts ":t:b:dmr" opt; do
+while getopts ":t:b:dmrj" opt; do
   case $opt in
     t)
       TARGET_SOC=$OPTARG
@@ -21,6 +21,9 @@ while getopts ":t:b:dmr" opt; do
       ENABLE_DMA32=ON
       export ENABLE_DMA32=TRUE
       ;;
+    j)
+      DISABLE_LIBJPEG=ON
+      ;;
     :)
       echo "Option -$OPTARG requires an argument."
       exit 1
@@ -38,6 +41,7 @@ if [ -z ${TARGET_SOC} ] ; then
   echo "    -r : disable rga, use cpu resize image"
   echo "    -b : build_type(Debug/Release)"
   echo "    -m : enable address sanitizer, build_type need set to Debug"
+  echo "    -j : disable libjpeg to avoid conflicts between libjpeg and opencv"
   echo "Note: 'rk356x' represents rk3562/rk3566/rk3568, 'rv1106' represents rv1103/rv1106"
   echo "Note: Currently, rv1106_rv1103 only support yolo26 det!"
   echo "such as: $0 -t rk3588 "
@@ -94,6 +98,10 @@ if [[ -z ${ENABLE_ASAN} ]];then
     ENABLE_ASAN=OFF
 fi
 
+if [[ -z ${DISABLE_LIBJPEG} ]];then
+    DISABLE_LIBJPEG=OFF
+fi
+
 if [[ -z ${GCC_COMPILER} ]];then
     if [[ ${TARGET_SOC} = "rv1106"  || ${TARGET_SOC} = "rv1103" ]];then
         echo "Please set GCC_COMPILER for $TARGET_SOC"
@@ -141,6 +149,7 @@ cmake ../.. \
     -DENABLE_ASAN=${ENABLE_ASAN} \
     -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
     -DDISABLE_RGA=${DISABLE_RGA} \
+    -DDISABLE_LIBJPEG=${DISABLE_LIBJPEG} \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
 make -j4
 make install

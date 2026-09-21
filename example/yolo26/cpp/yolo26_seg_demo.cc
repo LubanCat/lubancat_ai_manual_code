@@ -170,5 +170,9 @@ out:
         printf("release_yolo26_model fail! ret=%d\n", ret);
     }
 
+    if (src_image.virt_addr != NULL)
+    {
+        free(src_image.virt_addr);
+    }
     return 0;
 }

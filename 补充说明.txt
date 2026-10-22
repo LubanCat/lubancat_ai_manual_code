@@ -1,4 +1,4 @@
-AI教程中例程代码之外的软件工具、库包等内容请从鲁班猫云盘资料下载：
+因仓库尺寸限制，AI教程中例程代码之外的软件工具、库包等内容请从鲁班猫云盘资料下载：
 
 https://doc.embedfire.com/products/link/zh/latest/linux/ebf_lubancat.html
 
